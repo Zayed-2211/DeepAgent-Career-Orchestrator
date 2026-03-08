@@ -180,6 +180,12 @@ Generated output per job: `data/outputs/{job_uid}/cv_tailored.tex` + `.pdf`
 
 > If this file is missing, the default `cv_template.tex` is used automatically.
 
+**Auto-sync projects from CV:** After filling in your CV, run:
+```bash
+python scripts/sync_cv_projects.py
+```
+This reads your CV's Projects section and automatically appends any non-GitHub projects to `my_projects.json`. Projects already listed there and projects with a GitHub URL are safely skipped.
+
 ### `data/profile/my_github.py` — GitHub Settings
 Controls which of your public repos get indexed (no token needed):
 
@@ -245,6 +251,11 @@ python scripts/run_dedup.py --input data/raw/ --output data/processed/
 # Run Phase 4 intelligence extraction
 python scripts/run_intelligence.py            # Process most recent processed file
 python scripts/run_intelligence.py --limit 5  # Test with only 5 new records
+
+# Sync non-GitHub projects from your CV to my_projects.json
+python scripts/sync_cv_projects.py           # Normal run
+python scripts/sync_cv_projects.py --dry-run  # Preview only (no file written)
+python scripts/sync_cv_projects.py --force    # Bypass duplicate check
 
 # Phase 5 — Rebuild the profile vector index
 # (reads data/profile/my_cv.tex + my_projects.json + GitHub repos)
