@@ -77,7 +77,7 @@ DeepAgent-Career-Orchestrator/
 │   ├── search_queries.py      # 🔍 Job search queries, locations, geo IDs, post keywords
 │   ├── platforms_config.py    # Per-platform scraping settings
 │   ├── filters_and_sorting.py # Post-scrape filtering rules & sort order
-│   └── projects_config.py     # GitHub URL, repo include/exclude, profile paths
+│   └── projects_config.py     # CV/index behavior settings, template toggle
 │
 ├── src/                       # Application source code
 │   ├── scrapers/              # Phase 1 & 2 — Job scraping engines
@@ -106,13 +106,22 @@ DeepAgent-Career-Orchestrator/
 │   │       ├── run_status.json    # Live progress (overwritten per record)
 │   │       └── run_log.txt        # Append-only run log
 │   └── profile/               # Phase 5 profile data (gitignored)
-│       ├── my_cv.tex              # ← PASTE YOUR LATEX CV HERE
+│       ├── my_cv.tex              # ← Your LaTeX CV
+│       ├── my_github.py           # ← GitHub URL + include/exclude lists
 │       ├── my_projects.json       # ← Manual projects (not on GitHub)
 │       └── vector_index/          # ChromaDB profile index (auto-generated)
 │
+├── data/profile.example/      # Starter files — rename folder to profile/ to use
+│   ├── my_cv.tex              # CV placeholder
+│   ├── my_github.py           # GitHub settings placeholder
+│   ├── my_projects.json       # Manual projects placeholder
+│   └── README.md              # Setup instructions
+│
+├── templates/                 # Project templates (committed)
+│   └── cv_template.tex        # Default ATS-friendly LaTeX CV (fallback)
+│
 ├── tests/                     # Test suite (mirrors src/ structure)
 ├── scripts/                   # CLI entry points for each phase
-├── docs/                      # Documentation & roadmap
 │
 ├── .env.example               # Environment variable template
 ├── .gitignore                 # Git ignore rules
@@ -208,9 +217,9 @@ For projects not on GitHub (or projects you want to describe yourself):
 USE_DEFAULT_CV_TEMPLATE: bool = False
 ```
 
-The default template (`data/profile.example/cv_template.tex`) is committed to the repo and ready to use.
+The default template lives at `templates/cv_template.tex` (committed to the repo — always available).
 
-See `data/profile.example/` for copy-paste starter files for all three.
+To get started, rename `data/profile.example/` → `data/profile/` — files are already named correctly, no further renaming needed.
 
 ---
 
@@ -293,7 +302,7 @@ The implementation roadmap is split into 4 parts for easier reading:
 | **Phase 2** | ✅ Done | LinkedIn post scraper + Gemini-powered keyword generation (Arabic + English, geo-filtered, smart time window) |
 | **Phase 3** | ✅ Done | Dedup, multi-role splitting, contact extraction, LLM-based near-duplicate detection |
 | **Phase 4** | ✅ Done | Intelligence extraction: Gemini parses skills, salary, exp, seniority. UID pre-filtering. Incremental writes. Crash recovery. |
-| **Phase 5** | 🟡 Config ready | Profile setup files created: `my_cv.tex`, `my_projects.json`, `projects_config.py`. Indexer (ChromaDB) not yet built. |
+| **Phase 5** | 🟡 Config ready | Profile setup files created: `my_cv.tex`, `my_github.py`, `my_projects.json`. Indexer (ChromaDB) not yet built. |
 | **Phase 6** | 🔜 Coming | LangGraph matching agent — scores jobs vs. your profile, asks approval |
 | **Phase 7** | 🔜 Coming | LaTeX CV + cover letter generator (tailored per job) |
 | **Phase 8+** | 🔜 Coming | Company research, Telegram alerts, Supabase cloud sync |
