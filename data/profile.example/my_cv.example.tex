@@ -1,0 +1,64 @@
+% =============================================================================
+%  EXAMPLE — data/profile/my_cv.tex
+%
+%  Copy this file to data/profile/my_cv.tex and replace with your real CV.
+%  data/profile/ is gitignored — your CV stays private.
+%
+%  The agent reads data/profile/my_cv.tex as the BASE TEMPLATE.
+%  Tailored copies are generated to: data/outputs/{job_uid}/cv_tailored.tex
+% =============================================================================
+
+\documentclass[11pt, a4paper]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\begin{document}
+
+% --- HEADER ---
+\begin{center}
+    {\LARGE \textbf{Your Full Name}}\\[4pt]
+    City, Country
+    $\cdot$
+    \href{mailto:you@email.com}{you@email.com}
+    $\cdot$
+    \href{https://linkedin.com/in/yourprofile}{linkedin.com/in/yourprofile}
+    $\cdot$
+    \href{https://github.com/yourusername}{github.com/yourusername}
+\end{center}
+
+% --- SUMMARY ---
+\section*{Summary}
+2-3 sentence professional summary here.
+
+% --- EXPERIENCE ---
+\section*{Experience}
+\textbf{Job Title} \hfill \textit{Month Year -- Present}\\
+\textit{Company Name} — City, Country
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item Key achievement or responsibility
+    \item Another achievement
+\end{itemize}
+
+% --- EDUCATION ---
+\section*{Education}
+\textbf{Degree Name} \hfill \textit{Year}\\
+\textit{University Name}
+
+% --- SKILLS ---
+\section*{Skills}
+\textbf{Languages:} Python, ...\\
+\textbf{Frameworks:} LangChain, FastAPI, ...\\
+\textbf{Tools:} Docker, Git, AWS, ...
+
+% --- PROJECTS ---
+% Agent matches projects from config/projects_config.py and
+% data/profile/my_projects.json based on each job's tech stack.
+\section*{Projects}
+\textbf{Project Name} \hfill \href{https://github.com/you/repo}{github.com/you/repo}\\
+\textit{Python, FastAPI, PostgreSQL}
+\begin{itemize}[noitemsep, topsep=2pt]
+    \item What it does and its impact
+\end{itemize}
+
+\end{document}

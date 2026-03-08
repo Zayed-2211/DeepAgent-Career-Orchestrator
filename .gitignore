@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Virtual Environment
+.career-env/
+.venv/
+venv/
+env/
+
+# Environment Variables (secrets)
+.env
+
+# Docs — private implementation roadmap, not for public
+docs/
+
+# Data (generated at runtime)
+data/
+
+# Profile data — personal CV and projects (private)
+# data/profile.example/ is intentionally NOT ignored — it's a public placeholder
+data/profile/
+
+# ChromaDB (vector store)
+chroma_db/
+
+# SQLite Database
+*.db
+
+# LaTeX Build Artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS Files
+Thumbs.db
+.DS_Store
+
+# Distribution
+dist/
+build/
+*.egg-info/

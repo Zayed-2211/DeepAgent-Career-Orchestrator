@@ -1,0 +1,44 @@
+# ===========================
+# DeepAgent Career Orchestrator
+# Full Dependency List
+# ===========================
+# Install: pip install -r requirements.txt
+# Add new deps per-phase as documented in the roadmap.
+
+# === Core (Phase 0) ===
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+python-dotenv>=1.0.0
+loguru>=0.7.0
+rich>=13.0.0
+
+# === Scraping (Phase 1 & 2) ===
+python-jobspy>=1.1.0
+httpx>=0.27.0
+pandas>=2.1.0
+apify-client>=1.6.0
+
+# === Data Processing (Phase 3) ===
+datasketch>=1.6.0
+google-genai>=1.0.0
+
+# === AI Agent (Phase 5 & 6) ===
+chromadb>=0.4.0
+gitpython>=3.1.0
+pymupdf>=1.23.0
+langchain-core>=0.3.0
+langchain-google-genai>=2.0.0
+langgraph>=0.2.0
+
+# === Document Generation (Phase 7) ===
+Jinja2>=3.1.0
+
+# === Research (Phase 8) ===
+tavily-python>=0.3.0
+
+# === Cloud Storage (Phase 9) ===
+supabase>=2.0.0
+
+# === Testing ===
+pytest>=8.0.0
+pytest-asyncio>=0.23.0

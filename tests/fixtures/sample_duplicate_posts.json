@@ -1,0 +1,38 @@
+[
+    {
+        "_fixture_note": "Duplicate post fixture — 3 instances of the SAME job post (Tot's College Office Manager) shared across different URLs/reshares. Used to test fingerprint.py and job_uid dedup. job_uid differs per reshare URL but content is identical. Source: real posts scraped 2026-03-07.",
+        "platform": "linkedin_posts",
+        "posting_type": "Manual_Post",
+        "job_uid": "7434727568274259968",
+        "title": "🚀 WE ARE HIRING!",
+        "description": "🚀 WE ARE HIRING!\n🎯 Office Manager to CEO\n📍 5th Settlement – New Cairo\nAn International Nursery in New Cairo is looking for a dynamic Office Manager to the CEO to join our growing team 🌟\n✨ What we're looking for:\n✔ Fluent English\n✔ Strong computer skills\n✔ Excellent communication skills\n✔ AI tools knowledge (ChatGPT & more)\n\n📲 Send your CV now: 01557801754\n📧 Or email: hr.totscollege@gmail.com",
+        "author_name": "Mohamed Sabry",
+        "author_headline": "HR Manager | Tot's College",
+        "job_url": "https://www.linkedin.com/posts/mohamed-m-sabry_hiringnow-newcairo-5thsettlement-activity-7434727568274259968-Bb7B",
+        "emails": []
+    },
+    {
+        "_fixture_note": "DUPLICATE of above — same description, different job_uid (reshared via a group post URL). The fingerprint dedup should catch this even if job_uid differs.",
+        "platform": "linkedin_posts",
+        "posting_type": "Manual_Post",
+        "job_uid": null,
+        "title": "🚀 WE ARE HIRING!",
+        "description": "🚀 WE ARE HIRING!\n🎯 Office Manager to CEO\n📍 5th Settlement – New Cairo\nAn International Nursery in New Cairo is looking for a dynamic Office Manager to the CEO to join our growing team 🌟\n✨ What we're looking for:\n✔ Fluent English\n✔ Strong computer skills\n✔ Excellent communication skills\n✔ AI tools knowledge (ChatGPT & more)\n\n📲 Send your CV now: 01557801754\n📧 Or email: hr.totscollege@gmail.com",
+        "author_name": "Mohamed Sabry",
+        "author_headline": "HR Manager | Tot's College",
+        "job_url": "https://www.linkedin.com/feed/update/urn:li:groupPost:11804206-7434728651344113664",
+        "emails": []
+    },
+    {
+        "_fixture_note": "DUPLICATE of above — same description, reshared by a different account (jobs-today-2023 page). Tests that even reshares with different authors are deduped via content fingerprint.",
+        "platform": "linkedin_posts",
+        "posting_type": "Employee_Shoutout",
+        "job_uid": "7434728266793467904",
+        "title": "🚀 WE ARE HIRING!",
+        "description": "🚀 WE ARE HIRING!\n🎯 Office Manager to CEO\n📍 5th Settlement – New Cairo\nAn International Nursery in New Cairo is looking for a dynamic Office Manager to the CEO to join our growing team 🌟\n✨ What we're looking for:\n✔ Fluent English\n✔ Strong computer skills\n✔ Excellent communication skills\n✔ AI tools knowledge (ChatGPT & more)\n\n📲 Send your CV now: 01557801754\n📧 Or email: hr.totscollege@gmail.com",
+        "author_name": "jobs today 2023",
+        "author_headline": "319 followers",
+        "job_url": "https://www.linkedin.com/posts/jobs-today-2023_hiringnow-newcairo-5thsettlement-activity-7434728266793467904-P7Qm",
+        "emails": []
+    }
+]

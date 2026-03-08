@@ -1,0 +1,69 @@
+{
+    "_fixture_note": "Phone number and email extraction test cases from real Egyptian job posts. Used to validate contact_extractor.py regex patterns. All samples are real, from actual scraped LinkedIn posts (2026-03-07).",
+    "phone_formats": {
+        "_note": "All valid Egyptian mobile number formats that the regex must match",
+        "format_01_standard_10digit": "01115742429",
+        "format_02_standard_11digit_whatsapp": "01557801754",
+        "format_03_with_plus20": "+201115742429",
+        "format_04_with_0020": "00201557801754",
+        "format_05_with_spaces": "0115 574 2429",
+        "format_06_with_dashes": "0115-574-2429",
+        "format_07_with_plus20_spaces": "+20 115 574 2429",
+        "format_08_arabic_numerals": "٠١١١٥٧٤٢٤٢٩",
+        "_prefix_note": "Valid Egyptian mobile prefixes: 010 (Vodafone), 011 (Etisalat), 012 (Orange), 015 (WE/Telecom Egypt)"
+    },
+    "test_posts_with_phones": [
+        {
+            "_source": "Electro Pi post (job_uid: 7434602224414220288)",
+            "text_snippet": "If you're interested, please send your CV With job title via WhatsApp to:\n📱 01115742429",
+            "expected_phones": [
+                "01115742429"
+            ],
+            "expected_emails": []
+        },
+        {
+            "_source": "Tot's College post (job_uid: 7434727568274259968)",
+            "text_snippet": "📲 Send your CV now: 01557801754\n📧 Or email: hr.totscollege@gmail.com",
+            "expected_phones": [
+                "01557801754"
+            ],
+            "expected_emails": [
+                "hr.totscollege@gmail.com"
+            ]
+        },
+        {
+            "_source": "Volkswagen Group Egypt post (job_uid: 7434791351461912576)",
+            "text_snippet": "📩 Now Accepting Résumés: jasmin.okwieka@volkswagengroupco.com",
+            "expected_phones": [],
+            "expected_emails": [
+                "jasmin.okwieka@volkswagengroupco.com"
+            ]
+        },
+        {
+            "_source": "Yozo AI post (job_uid: 7433841885737164800)",
+            "text_snippet": "If intrested ->\n\nEmail: ziad@yozo.ai\n\nAttach your Behance link / portfolio",
+            "expected_phones": [],
+            "expected_emails": [
+                "ziad@yozo.ai"
+            ]
+        }
+    ],
+    "negative_cases": [
+        {
+            "_note": "Should NOT match — generic 8-digit number (too short for Egyptian mobile)",
+            "text": "Team of 01234567 members",
+            "expected_phones": []
+        },
+        {
+            "_note": "Should NOT match — landline-style number (starts with 02 = Cairo landline, not mobile)",
+            "text": "Call us at 0223456789",
+            "expected_phones": []
+        },
+        {
+            "_note": "Should NOT match — random numbers in text",
+            "text": "5 years of experience, salary 15000 EGP",
+            "expected_phones": [],
+            "expected_emails": []
+        }
+    ]
+}

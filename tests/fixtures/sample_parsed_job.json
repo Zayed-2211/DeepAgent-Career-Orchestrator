@@ -1,0 +1,60 @@
+{
+    "_fixture_note": "Sample fully-parsed job record showing the expected output of Phase 4 intelligence extraction. This is what src/intelligence/schemas.py should validate. Used for test_schemas.py and test_job_parser.py. Based on the Yozo AI UX Designer post from the real scraped data (2026-03-07).",
+    "job_uid": "7433841885737164800",
+    "platform": "linkedin_posts",
+    "posting_type": "Employee_Shoutout",
+    "source_url": "https://www.linkedin.com/posts/reem-alaa-fathy_hiring-activity-7433841885737164800-nQhL",
+    "scout_data": {
+        "company_name": "Yozo AI",
+        "contact_info": "ziad@yozo.ai",
+        "application_method": "Email",
+        "salary_range": null,
+        "currency": null,
+        "extra_notes": "Attach Behance link / portfolio, CV, LinkedIn profile, current salary or expected, notice period"
+    },
+    "intelligence_data": {
+        "role_summary": "Junior-to-Mid UX & Product Designer role at Yozo AI (Cairo/Remote). Design SaaS dashboards, user flows, and onboarding experiences using Figma. Collaborate with engineering on complex product features.",
+        "total_exp_required": 2.0,
+        "exp_breakdown": {
+            "UX Design": 2,
+            "Figma": 1
+        },
+        "tech_stack": [
+            "Figma",
+            "Jira",
+            "ClickUp"
+        ],
+        "technical_skills": [
+            "User Experience Design",
+            "UI Design",
+            "SaaS Product Design",
+            "Design Systems",
+            "Component Libraries"
+        ],
+        "work_domains": [
+            "SaaS",
+            "FinTech",
+            "AI Products"
+        ],
+        "specializations": [
+            "Onboarding Flows",
+            "Analytics Dashboards",
+            "Automation Builders"
+        ],
+        "must_haves": [
+            "1-3 years experience",
+            "Strong Figma skills",
+            "UX understanding"
+        ],
+        "nice_to_haves": [
+            "Experience with SaaS products",
+            "Product thinking mindset"
+        ]
+    },
+    "location": {
+        "city": "Cairo",
+        "country": "Egypt",
+        "is_remote": true,
+        "job_type": "Full-time"
+    }
+}
