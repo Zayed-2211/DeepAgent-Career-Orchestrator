@@ -8,7 +8,7 @@ Only the projects listed in the CV's "Projects" section are extracted.
 GitHub URL detection is done here so the caller can decide what to skip.
 """
 
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from loguru import logger
 
@@ -71,17 +71,6 @@ IMPORTANT:
   - Do not hallucinate any information not present in the CV.
 """
 
-_USER_MESSAGE = """Here is the LaTeX CV content:
-
-{cv_content}
-
-Extract all projects from the Projects section."""
-
-_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", _SYSTEM_MESSAGE),
-    ("human", _USER_MESSAGE),
-])
-
 
 # ---------------------------------------------------------------------------
 # Extractor
@@ -121,11 +110,20 @@ def extract_projects_from_cv(cv_content: str) -> list[ParsedCVProject]:
             logger.info(f"Extracting CV projects using model: {model_id}")
             llm = ChatGoogleGenerativeAI(
                 model=model_id,
-                google_api_key=settings.GEMINI_API_KEY,
+                google_api_key=settings.gemini_api_key,
                 temperature=0,
             )
-            chain = _PROMPT | llm.with_structured_output(CVProjectExtractionResult)
-            result: CVProjectExtractionResult = chain.invoke({"cv_content": cv_content})
+            chain = llm.with_structured_output(CVProjectExtractionResult)
+            messages = [
+                SystemMessage(content=_SYSTEM_MESSAGE),
+                HumanMessage(
+                    content=(
+                        f"Here is the LaTeX CV content:\n\n{cv_content}\n\n"
+                        "Extract all projects from the Projects section."
+                    )
+                ),
+            ]
+            result: CVProjectExtractionResult = chain.invoke(messages)
             logger.info(f"Extracted {len(result.projects)} project(s) from CV.")
             return result.projects
 
