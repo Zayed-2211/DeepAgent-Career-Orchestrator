@@ -9,15 +9,17 @@ those live in data/profile/my_github.py (gitignored).
 FILE LAYOUT
 ──────────────────────────────────────────────
 
-  data/profile/
+  data/profile/               ← gitignored (your private data)
     my_cv.tex          → Your LaTeX CV (base template for Phase 7)
     my_github.py       → Your GitHub URL + include/exclude repo lists
     my_projects.json   → Manual projects not on GitHub
 
-  data/profile.example/
-    my_cv.example.tex          → Copy → data/profile/my_cv.tex
-    my_github.example.py       → Copy → data/profile/my_github.py
-    my_projects.example.json   → Copy → data/profile/my_projects.json
+  data/profile.example/       ← committed (rename folder → profile/ to use)
+    my_cv.tex                  → placeholder, replace with your real CV
+    my_github.py               → placeholder, set your GITHUB_URL
+    my_projects.json           → placeholder, add your projects
+
+  templates/                  ← committed project assets
     cv_template.tex            → Default CV template (used as fallback)
 
 ──────────────────────────────────────────────
@@ -50,7 +52,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 _ROOT = Path(__file__).resolve().parent.parent
 _PROFILE_DIR = _ROOT / "data" / "profile"
-_EXAMPLE_DIR = _ROOT / "data" / "profile.example"
+_TEMPLATES_DIR = _ROOT / "templates"
 
 
 # ===========================================================================
@@ -69,7 +71,7 @@ CV_FILE: Path = _PROFILE_DIR / "my_cv.tex"
 
 # Default LaTeX CV template committed to the repo.
 # Used when USE_DEFAULT_CV_TEMPLATE=True or when CV_FILE doesn't exist.
-CV_TEMPLATE_FILE: Path = _EXAMPLE_DIR / "cv_template.tex"
+CV_TEMPLATE_FILE: Path = _TEMPLATES_DIR / "cv_template.tex"
 
 # Toggle: set True to always use the template instead of your personal CV.
 # If CV_FILE doesn't exist, the template is used automatically regardless.

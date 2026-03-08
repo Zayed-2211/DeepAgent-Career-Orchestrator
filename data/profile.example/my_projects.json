@@ -1,10 +1,9 @@
 [
     {
-        "_comment": "Copy this file to data/profile/my_projects.json — data/profile/ is gitignored.",
+        "_comment": "Rename data/profile.example/ → data/profile/ and this file is ready to edit.",
         "_instructions": [
-            "Add any project NOT on GitHub, or any project you want to describe manually.",
-            "Fields: name (required), description (required), tech_stack, domains,",
-            "        highlights (CV bullet points), github_url (null if not on GitHub), period."
+            "Add projects NOT on GitHub, or projects you want to describe manually.",
+            "Fields: name, description, tech_stack, domains, highlights, github_url (null if no link), period."
         ]
     },
     {
@@ -22,15 +21,14 @@
         ],
         "highlights": [
             "Built a REST API handling 10k+ daily requests",
-            "Reduced processing time by 40% via Redis caching",
-            "Deployed on AWS EC2 with auto-scaling"
+            "Reduced processing time by 40% via Redis caching"
         ],
         "github_url": null,
         "period": "Jan 2025 - Mar 2025"
     },
     {
         "name": "Example Project With Manual Description",
-        "description": "Even if a project IS on GitHub, you can describe it here to control the CV bullet points exactly.",
+        "description": "Even if a project IS on GitHub, add it here to control CV bullet points exactly.",
         "tech_stack": [
             "Python",
             "LangChain",
@@ -42,7 +40,7 @@
             "NLP"
         ],
         "highlights": [
-            "Built a RAG pipeline over 50k+ documents with sub-200ms retrieval",
+            "RAG pipeline over 50k+ documents with sub-200ms retrieval",
             "Achieved 92% answer accuracy on internal benchmark"
         ],
         "github_url": "https://github.com/yourusername/your-repo",

@@ -1,8 +1,8 @@
 """
 EXAMPLE — data/profile/my_github.py
 
-Copy this to data/profile/my_github.py and fill in your details.
-data/profile/ is gitignored — your settings stay private.
+Rename the folder `data/profile.example/` to `data/profile/` and all files
+inside are ready to use as-is — no individual file renaming needed.
 
 ──────────────────────────────────────────────
 HOW REPO SELECTION WORKS (priority order)
