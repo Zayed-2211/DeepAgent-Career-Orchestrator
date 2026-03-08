@@ -121,6 +121,17 @@ def _is_duplicate(name: str, existing: list[str], threshold: float = 0.85) -> bo
     return any(_names_similar(name, e, threshold) for e in existing)
 
 
+def _is_real_repo_url(url):
+    """Import the real implementation from the sync script."""
+    import importlib.util
+    from pathlib import Path
+    script = Path(__file__).resolve().parent.parent.parent / "scripts" / "sync_cv_projects.py"
+    spec = importlib.util.spec_from_file_location("sync_cv_projects", script)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.is_real_repo_url(url)
+
+
 class TestDuplicateDetection:
     def test_exact_match_is_duplicate(self):
         assert _is_duplicate("My RAG Chatbot", ["my rag chatbot"])
@@ -153,6 +164,33 @@ class TestPlaceholderDetection:
 # ---------------------------------------------------------------------------
 # Serialization
 # ---------------------------------------------------------------------------
+
+class TestIsRealRepoUrl:
+    """Tests for the GitHub URL validator — the core fix."""
+
+    def test_real_repo_url_is_true(self):
+        assert _is_real_repo_url("https://github.com/Zayed-2211/Secure-Agentic-CRAG")
+
+    def test_profile_root_with_trailing_slash_is_false(self):
+        # This is the exact case from the user's CV for Video to Video Translation
+        assert not _is_real_repo_url("https://github.com/Zayed-2211/")
+
+    def test_profile_root_without_trailing_slash_is_false(self):
+        assert not _is_real_repo_url("https://github.com/Zayed-2211")
+
+    def test_none_is_false(self):
+        assert not _is_real_repo_url(None)
+
+    def test_empty_string_is_false(self):
+        assert not _is_real_repo_url("")
+
+    def test_non_github_url_is_false(self):
+        assert not _is_real_repo_url("https://gitlab.com/user/repo")
+
+    def test_deep_repo_path_is_true(self):
+        # e.g. github.com/user/repo/tree/main — still a real repo
+        assert _is_real_repo_url("https://github.com/user/repo/tree/main")
+
 
 class TestProjectSerialization:
     def test_project_to_dict(self, private_project):

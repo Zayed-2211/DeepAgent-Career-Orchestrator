@@ -9,9 +9,12 @@ Usage:
 What it does:
   1. Reads data/profile/my_cv.tex
   2. Uses Gemini to extract all projects from the Projects section
-  3. Skips projects that already have a GitHub URL (the GitHub indexer handles those)
+  3. Skips projects that link to a REAL GitHub repo (the GitHub indexer handles those)
+     A real repo URL has the form: github.com/username/repo-name (2+ path segments)
+     A profile/fake URL like github.com/username/ does NOT count as a real repo
   4. Skips projects whose name closely matches one already in my_projects.json
   5. Appends new non-GitHub projects to my_projects.json
+     (profile/fake GitHub URLs are set to null in the output)
 
 Run this whenever you update your CV and want the changes reflected automatically.
 """
@@ -21,6 +24,7 @@ import json
 import sys
 from difflib import SequenceMatcher
 from pathlib import Path
+from urllib.parse import urlparse
 
 from loguru import logger
 
@@ -43,6 +47,28 @@ _SIMILARITY_THRESHOLD = 0.85  # SequenceMatcher ratio — 0.85 = very close name
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+def is_real_repo_url(url: str | None) -> bool:
+    """
+    Return True only if the URL points to a specific GitHub repository.
+
+    A real repo URL has the pattern: github.com/{username}/{repo-name}
+    where {repo-name} is a non-empty string (2+ path segments after the domain).
+
+    Examples:
+      https://github.com/Zayed-2211/Secure-Agentic-CRAG  → True  (real repo)
+      https://github.com/Zayed-2211/                     → False (profile root)
+      https://github.com/Zayed-2211                      → False (profile root)
+      None                                               → False (no URL at all)
+    """
+    if not url:
+        return False
+    parsed = urlparse(url)
+    if "github.com" not in (parsed.netloc or ""):
+        return False
+    # Strip leading/trailing slashes and split; need at least username + repo-name
+    segments = [s for s in parsed.path.strip("/").split("/") if s]
+    return len(segments) >= 2
 
 def _is_placeholder_entry(entry: dict) -> bool:
     """Return True if this JSON entry is a comment/instructions block, not a real project."""
@@ -88,14 +114,19 @@ def _is_duplicate(name: str, existing_names: list[str]) -> bool:
 
 
 def _project_to_dict(p: ParsedCVProject) -> dict:
-    """Convert a ParsedCVProject to the JSON dict format used in my_projects.json."""
+    """
+    Convert a ParsedCVProject to the JSON dict format used in my_projects.json.
+    If the project's github_url is not a real repo URL (e.g. a profile root),
+    it is written as null so it doesn't pollute the projects file.
+    """
     return {
         "name": p.name,
         "description": p.description,
         "tech_stack": p.tech_stack,
         "domains": p.domains,
         "highlights": p.highlights,
-        "github_url": p.github_url,
+        # Only write a github_url if it actually points to a specific repo
+        "github_url": p.github_url if is_real_repo_url(p.github_url) else None,
         "period": p.period,
     }
 
@@ -151,7 +182,8 @@ def sync_cv_projects(dry_run: bool = False, force: bool = False) -> None:
     skipped_duplicate: list[str] = []
 
     for project in extracted:
-        if project.github_url and not force:
+        # Skip only if the URL points to a REAL specific repo (not a profile root or fake link)
+        if is_real_repo_url(project.github_url) and not force:
             skipped_github.append(project.name)
             continue
 
@@ -166,7 +198,7 @@ def sync_cv_projects(dry_run: bool = False, force: bool = False) -> None:
     print(f"  CV Projects Sync Summary")
     print("─" * 60)
     print(f"  Extracted from CV        : {len(extracted)}")
-    print(f"  Skipped (has GitHub URL) : {len(skipped_github)}")
+    print(f"  Skipped (real repo on GitHub): {len(skipped_github)}")
     if skipped_github:
         for name in skipped_github:
             print(f"    • {name}")
