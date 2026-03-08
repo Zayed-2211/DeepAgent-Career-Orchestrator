@@ -1,0 +1,192 @@
+% =============================================================================
+%  DEFAULT CV TEMPLATE
+%  Used by Phase 7 when data/profile/my_cv.tex doesn't exist,
+%  or when USE_DEFAULT_CV_TEMPLATE = True in config/projects_config.py.
+%
+%  Style: Jake Gutierrez / sb2nov resume — ATS-friendly, single column.
+%  Compile with: pdflatex cv_template.tex
+% =============================================================================
+
+%-------------------------
+% Resume in Latex
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small #3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small #1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      #1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%  RESUME STARTS HERE  %%%%%
+
+\begin{document}
+
+%-----------HEADER-----------
+\begin{center}
+    \textbf{\huge \scshape YOUR FULL NAME} \\ \vspace{1pt}
+    \small
+    \href{mailto:your@email.com}{\underline{your@email.com}} $|$
+    \href{tel:+201XXXXXXXXX}{+20 1XX XXX XXXX} $|$
+    \href{https://linkedin.com/in/yourprofile}{\underline{LinkedIn}} $|$
+    \href{https://github.com/yourusername}{\underline{GitHub}}
+\end{center}
+
+%-----------SUMMARY-----------
+\section{Summary}
+Your 2--3 sentence professional summary here. Mention your core expertise,
+years of experience, and what kind of roles you target.
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {University Name}{City, Country}
+      {Degree, Major — GPA: X.XX}{Graduated Month Year}
+        \resumeItemListStart
+          \resumeItem{Relevant Coursework: Course 1, Course 2, Course 3}
+        \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Job Title}{Start Month Year -- End Month Year (or Present)}
+      {Company Name}{City, Country}
+      \resumeItemListStart
+        \resumeItem{\textbf{Achievement or responsibility.} What you did and the impact it had.}
+        \resumeItem{\textbf{Another achievement.} Quantify where possible (e.g. reduced X by 30\%).}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Job Title}{Start Month Year -- End Month Year}
+      {Company Name}{City, Country}
+      \resumeItemListStart
+        \resumeItem{Achievement or responsibility here.}
+        \resumeItem{Another achievement here.}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------
+% Agent matches and highlights projects from:
+%   data/profile/my_projects.json  (manual entries)
+%   config/projects_config.py + data/profile/my_github.py  (GitHub repos)
+\section{Projects}
+    \resumeSubHeadingListStart
+
+      \resumeProjectHeading
+          {\textbf{Project Name} $|$ \textit{Tech1, Tech2, Tech3}}{\href{https://github.com/you/repo}{\underline{GitHub}}}
+          \resumeItemListStart
+            \resumeItem{What the project does and what impact it had.}
+            \resumeItem{Key technical detail or achievement.}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{Project Name 2} $|$ \textit{Tech1, Tech2}}{}
+          \resumeItemListStart
+            \resumeItem{What this project does (no GitHub link for private/manual projects).}
+          \resumeItemListEnd
+
+    \resumeSubHeadingListEnd
+
+%-----------ACTIVITIES-----------
+\section{Activities}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Role / Committee}{Start -- End}
+      {Organization Name}{City, Country}
+      \resumeItemListStart
+        \resumeItem{What you did and the impact.}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-----------SKILLS-----------
+\section{Skills}
+\begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Programming Languages:}{ Python, SQL, ...} \\
+     \textbf{AI / ML:}{ LangChain, LangGraph, Gemini, PyTorch, TensorFlow, ...} \\
+     \textbf{Data \& Visualization:}{ Pandas, NumPy, Power BI, Tableau, ...} \\
+     \textbf{Development:}{ Git, Docker, FastAPI, ...}
+    }}
+\end{itemize}
+
+%-------------------------------------------
+\end{document}

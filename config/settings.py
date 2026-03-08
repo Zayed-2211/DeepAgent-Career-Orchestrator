@@ -22,12 +22,13 @@ from config.search_queries import SEARCH_QUERIES, LOCATIONS
 from config.platforms_config import PLATFORMS_CONFIG
 from config.filters_and_sorting import FILTERS, SORTING
 from config.projects_config import (
-    GITHUB_PROFILE_URL,
-    GITHUB_INCLUDE_REPOS,
-    GITHUB_EXCLUDE_REPOS,
     CV_FILE,
+    CV_TEMPLATE_FILE,
+    USE_DEFAULT_CV_TEMPLATE,
     MANUAL_PROJECTS_FILE,
     PROFILE_INDEX_DIR,
+    load_github_profile,
+    resolve_cv_path,
 )
 
 # ---------------------------------------------------------------------------

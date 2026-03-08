@@ -160,51 +160,57 @@ The scraper automatically switches between `past-week` and `past-24h` based on w
 
 ---
 
-## 👤 Profile Setup (`config/projects_config.py`)
+## 👤 Profile Setup
 
-Before running Phase 5+, configure your profile in two places:
+Before running Phase 5+, fill in three files in `data/profile/` (gitignored — stays private):
 
-### 1. Your LaTeX CV — `data/profile/my_cv.tex`
-
-Paste your full LaTeX CV into this file. This is the **base template** — Phase 7 reads it and generates a tailored copy per job. Your original is never overwritten.
+### `data/profile/my_cv.tex` — Your LaTeX CV
+Paste your full LaTeX CV here. Phase 7 reads it as the base template and generates a tailored copy per job. Your original is never overwritten.
 
 Generated output per job: `data/outputs/{job_uid}/cv_tailored.tex` + `.pdf`
 
-### 2. Manual Projects — `data/profile/my_projects.json`
+> If this file is missing, the default `cv_template.tex` is used automatically.
 
-Add any project that is **not on GitHub** (or that you want to describe manually). No GitHub link required.
+### `data/profile/my_github.py` — GitHub Settings
+Controls which of your public repos get indexed (no token needed):
+
+```python
+GITHUB_URL = "https://github.com/YOUR_USERNAME"  # public API, no token
+
+# Option A — Whitelist: only these repos (checked first)
+INCLUDE_REPOS = ["my-rag-chatbot", "my-api"]
+
+# Option B — Blacklist: all repos EXCEPT these (if INCLUDE is empty)
+EXCLUDE_REPOS = ["old-uni-project", "test-repo"]
+
+# Option C — Both empty → use ALL public repos
+```
+
+### `data/profile/my_projects.json` — Manual Projects
+For projects not on GitHub (or projects you want to describe yourself):
 
 ```json
 {
   "name": "My Project",
   "description": "What it does",
   "tech_stack": ["Python", "FastAPI"],
-  "highlights": ["Built X that does Y", "Reduced Z by 40%"],
+  "highlights": ["Built X doing Y", "Reduced Z by 40%"],
   "github_url": null,
   "period": "Jan 2025 - Mar 2025"
 }
 ```
 
-### 3. GitHub Settings — `config/projects_config.py`
-
-Set your GitHub profile URL and control which repos get included:
+### CV Template Toggle (`config/projects_config.py`)
 
 ```python
-# Your GitHub profile (public API — no token needed)
-GITHUB_PROFILE_URL = "https://github.com/YOUR_USERNAME"
-
-# OPTION A — Whitelist: only these repos are used (checked first)
-GITHUB_INCLUDE_REPOS = ["my-rag-chatbot", "arabic-nlp-api"]
-
-# OPTION B — Blacklist: all repos EXCEPT these (used only if INCLUDE is empty)
-GITHUB_EXCLUDE_REPOS = ["old-uni-assignments", "test-repo"]
-
-# OPTION C — Both empty → use ALL public repos, agent picks the best per job
+# False (default) — use my_cv.tex; falls back to cv_template.tex if missing
+# True            — always use the built-in template (good for testing)
+USE_DEFAULT_CV_TEMPLATE: bool = False
 ```
 
-**Priority order:** `INCLUDE_REPOS` → `EXCLUDE_REPOS` → all public repos
+The default template (`data/profile.example/cv_template.tex`) is committed to the repo and ready to use.
 
-All GitHub repos are combined with `my_projects.json`. The agent selects the most relevant projects for each specific job automatically.
+See `data/profile.example/` for copy-paste starter files for all three.
 
 ---
 
