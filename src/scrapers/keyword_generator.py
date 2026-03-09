@@ -23,8 +23,8 @@ from pathlib import Path
 from google import genai
 from loguru import logger
 
-from config.settings import get_settings
-from config.models_config import KEYWORD_GENERATION_PRIMARY, KEYWORD_GENERATION_FALLBACK, DATA_DIR
+from config.settings import get_settings, DATA_DIR
+from config.models_config import KEYWORD_GENERATION_PRIMARY, KEYWORD_GENERATION_FALLBACK
 
 
 # ---------------------------------------------------------------------------

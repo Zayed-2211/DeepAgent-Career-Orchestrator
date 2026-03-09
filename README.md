@@ -2,6 +2,20 @@
 
 An AI-powered career agent that **automatically scrapes** job listings, **intelligently parses** them, **matches** them against your profile, and **generates tailored CVs & cover letters** — all orchestrated by a LangGraph agent with human-in-the-loop approval.
 
+## 🧠 Agent Architecture
+
+> The LangGraph agent that powers the pipeline:
+
+![Agent Graph](docs/agent_graph.png)
+
+The graph flows as: **Intake → Analysis → Matching → Planning → Review → Dispatch**
+- **Intake**: validates the job and checks for duplicates (skips if already processed)
+- **Analysis**: calls Gemini to extract structured intelligence from the job description
+- **Matching**: scores your personal projects against the job using keyword overlap
+- **Planning**: builds a structured todo list for the application
+- **Review**: shows you a rich summary and waits for your `approve` / `reject` decision
+- **Dispatch**: writes a dispatch manifest for CV generation (Phase 7) or archives the rejection
+
 ---
 
 ## ✨ What It Does
@@ -261,8 +275,11 @@ python scripts/sync_cv_projects.py --force    # Bypass duplicate check
 # (reads data/profile/my_cv.tex + my_projects.json + GitHub repos)
 python scripts/run_indexer.py --rebuild
 
-# Run the full agent pipeline for a specific job
-python scripts/run_agent.py --job data/processed/job_xyz.json
+# Phase 6 — Run the LangGraph agent for a specific job
+python scripts/run_agent.py --job-file data/processed/2026-03-07/deduped_jobs.json   # process first record
+python scripts/run_agent.py --job-file data/intelligence/2026-03-07/parsed_jobs.json --index 2  # specific index
+python scripts/run_agent.py --job-file data/processed/2026-03-07/deduped_jobs.json --all        # process all jobs
+python scripts/run_agent.py --export-graph    # re-export the agent graph PNG
 ```
 
 ---

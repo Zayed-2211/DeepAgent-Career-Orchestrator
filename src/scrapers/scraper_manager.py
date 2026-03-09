@@ -201,7 +201,7 @@ class ScraperManager:
             value = job.get(sort_by)
             if value is None:
                 # Push None values to the end regardless of sort direction
-                return (1, "")
+                return (-1 if reverse else 1, "")
             return (0, value)
 
         return sorted(jobs, key=sort_key, reverse=reverse)
