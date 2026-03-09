@@ -25,17 +25,17 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from loguru import logger
 
 from config.settings import get_settings
+from config.models_config import JOB_PARSING_PRIMARY, JOB_PARSING_FALLBACK
 from src.intelligence.schemas import GeminiJobResponse, ParsedJob
 from src.intelligence.uid_extractor import uid_from_url
 
 
 # ---------------------------------------------------------------------------
 # Approved Gemini models (verified available 2026-03-07)
-# NOTE: Only use these two models. Do not change to older/unverified model IDs.
 # ---------------------------------------------------------------------------
 _MODELS = [
-    "gemini-2.5-flash",               # Primary
-    "gemini-3.1-flash-lite-preview",  # Fallback
+    JOB_PARSING_PRIMARY,
+    JOB_PARSING_FALLBACK,
 ]
 
 _MAX_RETRIES = 2

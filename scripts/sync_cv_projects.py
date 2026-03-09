@@ -124,10 +124,11 @@ def _project_to_dict(p: ParsedCVProject) -> dict:
         "description": p.description,
         "tech_stack": p.tech_stack,
         "domains": p.domains,
-        "highlights": p.highlights,
+        "highlights": [h.model_dump() for h in p.highlights],
         # Only write a github_url if it actually points to a specific repo
         "github_url": p.github_url if is_real_repo_url(p.github_url) else None,
         "period": p.period,
+        "original_latex": p.original_latex,
     }
 
 
@@ -231,7 +232,7 @@ def sync_cv_projects(dry_run: bool = False, force: bool = False) -> None:
                 "_instructions": [
                     "Add any project here that is NOT on GitHub (or that you want to describe manually).",
                     "Projects with a GitHub URL will be handled by the GitHub indexer automatically.",
-                    "Fields: name, description, tech_stack, domains, highlights, github_url, period.",
+                    "Fields: name, description, tech_stack, domains, highlights [{text, tools}], github_url, period, original_latex.",
                 ]
             }
         ]

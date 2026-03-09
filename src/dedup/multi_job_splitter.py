@@ -25,14 +25,15 @@ from loguru import logger
 from pydantic import BaseModel, Field
 
 from config.settings import get_settings
+from config.models_config import JOB_SPLITTING_PRIMARY, JOB_SPLITTING_FALLBACK
 
 
 # ---------------------------------------------------------------------------
 # Approved models — verified via client.models.list() on 2026-03-07
 # ---------------------------------------------------------------------------
 _MODELS = [
-    "gemini-2.5-flash",              # Primary
-    "gemini-3.1-flash-lite-preview", # Fallback
+    JOB_SPLITTING_PRIMARY,
+    JOB_SPLITTING_FALLBACK,
 ]
 
 

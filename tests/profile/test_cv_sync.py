@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from src.profile.schemas import CVProjectExtractionResult, ParsedCVProject
+from src.profile.schemas import CVProjectExtractionResult, ParsedCVProject, ProjectHighlight
 
 
 # ---------------------------------------------------------------------------
@@ -31,11 +31,18 @@ def sample_project():
         tech_stack=["LangGraph", "LangChain", "Pinecone", "Python"],
         domains=["AI", "NLP"],
         highlights=[
-            "Built a stateful CRAG system using LangGraph and Gemini 1.5 Flash",
-            "Integrated Pydantic guardrails for strict domain compliance",
+            ProjectHighlight(
+                text="Built a stateful CRAG system using LangGraph and Gemini 1.5 Flash",
+                tools=["LangGraph", "Gemini 1.5 Flash"]
+            ),
+            ProjectHighlight(
+                text="Integrated Pydantic guardrails for strict domain compliance",
+                tools=["Pydantic"]
+            ),
         ],
         github_url="https://github.com/Zayed-2211/Secure-Agentic-CRAG",
         period=None,
+        original_latex="\\resumeProjectHeading{\\textbf{Secure Agentic CRAG}}...",
     )
 
 
@@ -46,9 +53,12 @@ def private_project():
         description="Power BI dashboard for retail sales trend analysis.",
         tech_stack=["Power BI", "Python", "SQL"],
         domains=["FinTech", "Retail"],
-        highlights=["Built real-time dashboard for 50+ stores"],
+        highlights=[
+            ProjectHighlight(text="Built real-time dashboard for 50+ stores", tools=["Power BI", "SQL"])
+        ],
         github_url=None,
         period="Jun 2024 - Nov 2024",
+        original_latex="\\resumeProjectHeading{\\textbf{Internal Retail Dashboard}}...",
     )
 
 
@@ -64,9 +74,10 @@ def existing_projects_json(tmp_path) -> Path:
             "description": "Power BI dashboard for retail.",
             "tech_stack": ["Power BI"],
             "domains": ["Retail"],
-            "highlights": ["Built real-time dashboard"],
+            "highlights": [{"text": "Built real-time dashboard", "tools": ["Power BI"]}],
             "github_url": None,
             "period": "2024",
+            "original_latex": "RAW TEX",
         }
     ]
     p = tmp_path / "my_projects.json"
@@ -89,7 +100,7 @@ class TestParsedCVProject:
         assert private_project.period == "Jun 2024 - Nov 2024"
 
     def test_defaults_are_lists(self):
-        p = ParsedCVProject(name="Minimal", description="A project.")
+        p = ParsedCVProject(name="Minimal", description="A project.", original_latex="RAW")
         assert isinstance(p.tech_stack, list)
         assert isinstance(p.domains, list)
         assert isinstance(p.highlights, list)
@@ -199,12 +210,14 @@ class TestProjectSerialization:
             "description": private_project.description,
             "tech_stack": private_project.tech_stack,
             "domains": private_project.domains,
-            "highlights": private_project.highlights,
+            "highlights": [h.model_dump() for h in private_project.highlights],
             "github_url": private_project.github_url,
             "period": private_project.period,
+            "original_latex": private_project.original_latex,
         }
         assert d["name"] == "Internal Retail Analytics Dashboard"
         assert d["github_url"] is None
+        assert d["highlights"][0]["tools"] == ["Power BI", "SQL"]
         # Verify it round-trips through JSON cleanly
         serialised = json.dumps(d, ensure_ascii=False)
         loaded = json.loads(serialised)

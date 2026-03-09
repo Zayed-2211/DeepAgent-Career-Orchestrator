@@ -23,7 +23,8 @@ from pathlib import Path
 from google import genai
 from loguru import logger
 
-from config.settings import get_settings, DATA_DIR
+from config.settings import get_settings
+from config.models_config import KEYWORD_GENERATION_PRIMARY, KEYWORD_GENERATION_FALLBACK, DATA_DIR
 
 
 # ---------------------------------------------------------------------------
@@ -129,7 +130,7 @@ class KeywordGenerator:
     # To check: python -c "from google import genai; c = genai.Client(api_key='...')
     #   ; [print(m.name) for m in c.models.list()]"
     # Do NOT hardcode model names from memory — they change and deprecate.
-    _MODELS = ["gemini-2.5-flash", "gemini-3.1-flash-lite-preview"]
+    _MODELS = [KEYWORD_GENERATION_PRIMARY, KEYWORD_GENERATION_FALLBACK]
     _MAX_RETRIES = 3
     _RETRY_DELAY = 5  # seconds between retries
 

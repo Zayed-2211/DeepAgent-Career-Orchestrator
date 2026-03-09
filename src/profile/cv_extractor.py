@@ -13,16 +13,16 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from loguru import logger
 
 from config.settings import get_settings
+from config.models_config import CV_EXTRACTION_PRIMARY, CV_EXTRACTION_FALLBACK
 from src.profile.schemas import CVProjectExtractionResult, ParsedCVProject
 
 
 # ---------------------------------------------------------------------------
 # Approved Gemini models (verified available 2026-03-07)
-# NOTE: Only use these two models. Do not change to older/unverified model IDs.
 # ---------------------------------------------------------------------------
 _MODELS = [
-    "gemini-2.5-flash",               # Primary
-    "gemini-3.1-flash-lite-preview",  # Fallback
+    CV_EXTRACTION_PRIMARY,
+    CV_EXTRACTION_FALLBACK,
 ]
 
 _MAX_CV_LENGTH = 12_000  # chars — LaTeX CVs can be verbose, allow more than job posts
@@ -54,8 +54,9 @@ EXTRACTION RULES:
     - Examples: AI, NLP, Healthcare, FinTech, Computer Vision, Backend, RAG.
 
   HIGHLIGHTS:
-    - Copy the bullet points verbatim, stripping LaTeX formatting.
+    - Split achievements into separate items, stripping LaTeX formatting for the `text` field.
     - Each highlight should be a single clear statement under 120 characters.
+    - IMPORTANT: Extract specific tools, languages, or frameworks explicitly used in THAT highlight into the `tools` array.
 
   GITHUB URL:
     - Extract the raw URL if a GitHub link appears next to the project heading.
@@ -64,6 +65,10 @@ EXTRACTION RULES:
   PERIOD:
     - Extract the date range shown next to the project heading (e.g. "Jan 2025 - Mar 2025").
     - Set to null if no period is shown.
+
+  ORIGINAL_LATEX:
+    - Copy the EXACT, unmodified chunk of LaTeX code corresponding to this project.
+    - Start from the project heading line (e.g. \resumeProjectHeading) through the end of its itemize list.
 
 IMPORTANT:
   - Only extract from the Projects section. Ignore work experience, education, and activities.

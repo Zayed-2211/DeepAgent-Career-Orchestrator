@@ -10,6 +10,15 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
+class ProjectHighlight(BaseModel):
+    """A single bullet point highlight from a project with tool attribution."""
+    text: str = Field(description="The clean, formatting-stripped text of the bullet point.")
+    tools: List[str] = Field(
+        default_factory=list,
+        description="List of specific tools, frameworks, or languages explicitly used in THIS specific highlight/bullet point (e.g. ['YOLOv8'], ['LangGraph', 'Gemini'])."
+    )
+
+
 class ParsedCVProject(BaseModel):
     """A single project extracted from the user's LaTeX CV by the LLM."""
 
@@ -36,11 +45,12 @@ class ParsedCVProject(BaseModel):
             "Examples: AI, NLP, Healthcare, FinTech, Computer Vision, Backend."
         )
     )
-    highlights: List[str] = Field(
+    highlights: List[ProjectHighlight] = Field(
         default_factory=list,
         description=(
-            "The bullet point achievements from the CV, verbatim or lightly cleaned. "
-            "Each highlight should be a self-contained statement under 120 characters."
+            "The bullet point achievements from the CV. Each highlight should "
+            "be a self-contained statement under 120 characters, with an array of "
+            "tools used for that specific highlight."
         )
     )
     github_url: Optional[str] = Field(
@@ -55,6 +65,12 @@ class ParsedCVProject(BaseModel):
         description=(
             "The time period shown next to the project heading, e.g. 'Jan 2025 - Mar 2025'. "
             "Set to null if no period is listed."
+        )
+    )
+    original_latex: str = Field(
+        description=(
+            "The exact, raw, unmodified LaTeX code chunk from the CV that "
+            "corresponds to this specific project. Include the heading and all bullet points."
         )
     )
 

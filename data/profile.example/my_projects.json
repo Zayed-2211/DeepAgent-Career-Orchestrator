@@ -20,11 +20,30 @@
             "Backend"
         ],
         "highlights": [
-            "Built a REST API handling 10k+ daily requests",
-            "Reduced processing time by 40% via Redis caching"
+            {
+                "text": "Built a REST API handling 10k+ daily requests",
+                "tools": [
+                    "FastAPI",
+                    "Python"
+                ]
+            },
+            {
+                "text": "Reduced processing time by 40% via caching layer",
+                "tools": [
+                    "Redis"
+                ]
+            },
+            {
+                "text": "Deployed on AWS EC2 with auto-scaling",
+                "tools": [
+                    "AWS",
+                    "EC2"
+                ]
+            }
         ],
         "github_url": null,
-        "period": "Jan 2025 - Mar 2025"
+        "period": "Jan 2025 - Mar 2025",
+        "original_latex": null
     },
     {
         "name": "Example Project With Manual Description",
@@ -40,10 +59,20 @@
             "NLP"
         ],
         "highlights": [
-            "RAG pipeline over 50k+ documents with sub-200ms retrieval",
-            "Achieved 92% answer accuracy on internal benchmark"
+            {
+                "text": "RAG pipeline over 50k+ documents with sub-200ms retrieval",
+                "tools": [
+                    "RAG",
+                    "ChromaDB"
+                ]
+            },
+            {
+                "text": "Achieved 92% answer accuracy on internal benchmark",
+                "tools": []
+            }
         ],
         "github_url": "https://github.com/yourusername/your-repo",
-        "period": "Oct 2024 - Dec 2024"
+        "period": "Oct 2024 - Dec 2024",
+        "original_latex": null
     }
 ]
