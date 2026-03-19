@@ -3,6 +3,8 @@ Scraper manager — orchestrates all scrapers, applies filters and sorting,
 merges results, and saves to raw output.
 """
 
+import copy
+import os
 from loguru import logger
 
 from config.constants import Platform, SortBy, SortOrder
@@ -46,7 +48,8 @@ class ScraperManager:
 
     def __init__(self):
         self.queries_config = load_search_queries()
-        self.platforms_config = load_platforms_config()
+        # Defensive copy: run_all may inject runtime-only caps (dev mode).
+        self.platforms_config = copy.deepcopy(load_platforms_config())
         self.filters_config = load_filters_config()
 
     # ------------------------------------------------------------------
@@ -57,11 +60,23 @@ class ScraperManager:
         queries = self.queries_config.get("search_queries", [])
         locations = self.queries_config.get("locations", [])
 
+        # ── Dev Mode Restrictions ──
+        dev_limit_str = os.environ.get("DEV_MODE_LIMIT")
+        dev_limit = int(dev_limit_str) if dev_limit_str else None
+
+        if dev_limit is not None:
+            logger.warning(
+                f"[Manager] DEV MODE: Limiting to 1 query, 1 location, and global max {dev_limit} scraped records."
+            )
+            queries = queries[:1]
+            locations = locations[:1]
+
         if not queries:
             logger.warning("No search queries defined in config/search_queries.json")
             return []
 
         all_results: list[dict] = []
+        remaining_budget = dev_limit
 
         for platform_key, platform_config in self.platforms_config.items():
             # Skip _notes and other metadata keys
@@ -77,19 +92,55 @@ class ScraperManager:
                 logger.debug(f"[{platform_key}] No scraper registered, skipping")
                 continue
 
-            results = self._run_platform(platform_enum, platform_config, queries, locations)
+            if remaining_budget is not None and remaining_budget <= 0:
+                logger.info("[Manager] DEV MODE: Budget exhausted; skipping remaining platforms.")
+                break
+
+            # Runtime config override (without mutating base config).
+            effective_config = dict(platform_config)
+            if remaining_budget is not None:
+                effective_config["max_results"] = remaining_budget
+                logger.info(
+                    f"[{platform_key}] DEV MODE: Remaining global budget={remaining_budget}; "
+                    f"platform cap={effective_config['max_results']}."
+                )
+
+            results = self._run_platform(platform_enum, effective_config, queries, locations)
+            if remaining_budget is not None and len(results) > remaining_budget:
+                logger.warning(
+                    f"[{platform_key}] Returned {len(results)} results above remaining budget "
+                    f"({remaining_budget}); truncating."
+                )
+                results = results[:remaining_budget]
+
+            # ── SAVE IMMEDIATELY after each platform finishes ──────────────
+            # This guarantees data is never lost even if a later step crashes.
+            if results:
+                _saver = _RawSaver()
+                _saver.save_raw(results, label=platform_key)
+            # ──────────────────────────────────────────────────────────────
+
             all_results.extend(results)
+            if remaining_budget is not None:
+                remaining_budget -= len(results)
+                logger.info(f"[Manager] DEV MODE: Remaining budget after {platform_key}: {remaining_budget}")
 
         # Apply filters and sorting
         filtered = self.apply_filters(all_results)
         sorted_results = self.apply_sorting(filtered)
 
-        # Save
+        # Safety net: never exceed global dev limit even if downstream behavior changes.
+        if dev_limit is not None and len(sorted_results) > dev_limit:
+            logger.warning(
+                f"[Manager] DEV MODE safety cap: truncating final results from "
+                f"{len(sorted_results)} to {dev_limit}."
+            )
+            sorted_results = sorted_results[:dev_limit]
+
+        # Save merged filtered results
         if sorted_results:
-            saver = BaseScraper.__subclasses__()[0]("all_platforms")
-            # Use a temporary saver just for the save_raw method
             _saver = _RawSaver()
-            _saver.save_raw(sorted_results, label="merged")
+            _saver.save_raw(sorted_results, label="merged_filtered")
 
         logger.info(
             f"[Manager] Done — {len(all_results)} raw → "
@@ -113,6 +164,7 @@ class ScraperManager:
         filtered = self.apply_filters(results)
         sorted_results = self.apply_sorting(filtered)
 
+        # Save immediately — even if later steps fail
         if sorted_results:
             _saver = _RawSaver()
             _saver.save_raw(sorted_results, label=platform_key)

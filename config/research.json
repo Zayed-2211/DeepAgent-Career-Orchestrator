@@ -1,0 +1,145 @@
+{
+  "_comment": "Configuration for company research (Phase 8)",
+  "_description": "Controls how the agent researches companies using Tavily and Gemini",
+  
+  "research_enabled": true,
+  "_research_enabled_note": "Master switch for all research features",
+  
+  "web_search": {
+    "_comment": "Tavily web search settings",
+    "enabled": true,
+    
+    "api_provider": "tavily",
+    "_api_provider_options": ["tavily"],
+    
+    "max_results": 5,
+    "_max_results_note": "Maximum search results to retrieve per query",
+    
+    "search_depth": "basic",
+    "_search_depth_options": ["basic", "advanced"],
+    "_search_depth_note": "basic = faster, advanced = more comprehensive (costs more)",
+    
+    "include_domains": [],
+    "_include_domains_note": "Only search these domains (empty = all domains)",
+    "_include_domains_example": ["glassdoor.com", "linkedin.com"],
+    
+    "exclude_domains": [],
+    "_exclude_domains_note": "Never search these domains",
+    
+    "timeout": 10,
+    "_timeout_note": "Maximum seconds to wait for search results"
+  },
+  
+  "glassdoor_research": {
+    "_comment": "Glassdoor company review research",
+    "enabled": true,
+    
+    "search_query_template": "{company_name} Glassdoor reviews Egypt",
+    "_search_query_template_note": "Template for Glassdoor search (use {company_name} placeholder)",
+    
+    "max_reviews_to_analyze": 10,
+    "_max_reviews_to_analyze_note": "Maximum number of reviews to summarize",
+    
+    "min_review_date": "2022-01-01",
+    "_min_review_date_note": "Ignore reviews older than this date (YYYY-MM-DD)",
+    
+    "extract_interview_questions": true,
+    "_extract_interview_questions_note": "Try to find interview questions from reviews"
+  },
+  
+  "linkedin_research": {
+    "_comment": "LinkedIn company research",
+    "enabled": true,
+    
+    "search_query_template": "{company_name} LinkedIn company page",
+    "_search_query_template_note": "Template for LinkedIn search",
+    
+    "extract_employee_count": true,
+    "extract_company_size": true,
+    "extract_recent_posts": false,
+    "_extract_recent_posts_note": "Analyze recent company posts (requires more API calls)"
+  },
+  
+  "community_research": {
+    "_comment": "Egyptian tech community research (Facebook groups, forums)",
+    "enabled": false,
+    "_enabled_note": "Disabled by default - requires manual Facebook group membership",
+    
+    "search_query_template": "{company_name} Egypt developer experience",
+    "_search_query_template_note": "General web search for community sentiment",
+    
+    "target_communities": [
+      "Egyptian Developers",
+      "ITI Alumni",
+      "Cairo Tech Community"
+    ],
+    "_target_communities_note": "Communities to search (if accessible)"
+  },
+  
+  "summarization": {
+    "_comment": "Gemini summarization settings for research",
+    "model": "gemini-2.5-flash",
+    "_model_options": [
+      "gemini-2.5-flash (recommended)",
+      "gemini-1.5-flash-8b (faster)"
+    ],
+    
+    "temperature": 0.2,
+    "_temperature_note": "Low temperature for factual summarization",
+    
+    "max_summary_length": 500,
+    "_max_summary_length_note": "Maximum words in summary",
+    
+    "extract_red_flags": true,
+    "_extract_red_flags_note": "Identify potential red flags (late payments, high turnover, etc.)",
+    
+    "sentiment_analysis": true,
+    "_sentiment_analysis_note": "Analyze overall sentiment (positive/negative/neutral)"
+  },
+  
+  "prep_pack": {
+    "_comment": "Prep Pack document generation",
+    "enabled": true,
+    
+    "format": "markdown",
+    "_format_options": ["markdown", "pdf"],
+    
+    "filename": "prep_pack.md",
+    
+    "sections": {
+      "company_overview": true,
+      "glassdoor_insights": true,
+      "community_sentiment": true,
+      "interview_questions": true,
+      "red_flags": true,
+      "key_takeaways": true
+    },
+    
+    "include_sources": true,
+    "_include_sources_note": "Include source URLs for verification"
+  },
+  
+  "rate_limiting": {
+    "_comment": "API rate limiting for research",
+    "tavily_delay_seconds": 1,
+    "_tavily_delay_seconds_note": "Delay between Tavily API calls",
+    
+    "gemini_delay_seconds": 4,
+    "_gemini_delay_seconds_note": "Delay between Gemini API calls (same as pipeline)",
+    
+    "max_retries": 3,
+    "_max_retries_note": "Maximum retries for failed API calls"
+  },
+  
+  "dev_mode": {
+    "_comment": "Development mode settings",
+    "skip_research": false,
+    "_skip_research_note": "Skip all research in dev mode (faster testing)",
+    
+    "use_mock_data": false,
+    "_use_mock_data_note": "Use mock research results for testing",
+    
+    "cache_results": true,
+    "_cache_results_note": "Cache research results to avoid duplicate API calls"
+  }
+}

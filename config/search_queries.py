@@ -23,7 +23,8 @@ SEARCH_QUERIES = [
     "Artificial Intelligence Engineer",
     "Machine Learning Engineer",
     "Generative AI Engineer",
-    "AI Automation Engineer"
+    "AI Automation Engineer",
+    "AI Specialist"
 ]
 
 # ---------------------------------------------------------------------------

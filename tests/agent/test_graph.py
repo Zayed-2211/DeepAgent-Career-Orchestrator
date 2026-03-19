@@ -12,8 +12,6 @@ Tests cover:
 """
 
 import json
-import os
-import re
 from pathlib import Path
 
 import pytest
@@ -211,7 +209,8 @@ class TestIntakeNode:
         assert result["routing"] == "continue"
         assert route_after_intake(result) == "continue"
 
-    def test_duplicate_job_routes_skip(self, monkeypatch):
+    def test_duplicate_job_routes_loop(self, monkeypatch):
+        """Phase 6.5: duplicate skip now routes to 'loop' to keep the batch going."""
         monkeypatch.setattr(
             "src.agent.nodes.intake_node.DBManager",
             _MockDBManager(exists_return=True),
@@ -219,8 +218,8 @@ class TestIntakeNode:
         record = {"job_uid": "test:111", "platform": "linkedin_posts", "title": "Dup"}
         state = initial_state(raw_record=record)
         result = intake_node(state)
-        assert result["routing"] == "skip"
-        assert route_after_intake(result) == "skip"
+        assert result["routing"] == "loop"
+        assert route_after_intake(result) == "loop"
 
 
 # ── Node — planning_node ──────────────────────────────────────────────────────
@@ -243,7 +242,6 @@ class TestPlanningNode:
 
 
 # ── Node — dispatch_node ──────────────────────────────────────────────────────
-import os
 from src.agent.nodes.dispatch_node import dispatch_node
 
 

@@ -1,15 +1,18 @@
 """
-Intake Node — Phase 6.
+Intake Node — Phase 6 / 6.5.
 
-First node in the agent graph. Responsible for:
-  1. Accepting a raw job dict (from Phase 3 or Phase 4 output)
+First node in the per-job processing chain. Responsible for:
+  1. Accepting a raw job dict (from loop_controller or direct call)
   2. Extracting the job_uid for fast dedup
   3. Checking if this UID was already processed in the DB
-  4. Routing to either "skip" (duplicate) or "continue" (new job)
+  4. Routing to "skip" (duplicate → back to loop) or "continue" (new job)
+
+Phase 6.5 change:
+  - Skip routing now returns "loop" instead of END, so the batch loop
+    continues processing the next job in the queue.
 
 Design:
   - Reads `processed_jobs` table via DBManager — same DB all phases share.
-  - If processed_jobs has no record for this UID, the job is new.
   - Does NOT call any LLM — intentionally cheap and fast.
 """
 
@@ -25,10 +28,10 @@ def intake_node(state: AgentState) -> AgentState:
     Validate and register an incoming job record.
 
     State in:  current_job (raw dict)
-    State out: job_uid, routing ("skip" or "continue"), metadata
+    State out: job_uid, routing ("loop" or "continue"), metadata
 
     Edge routing:
-        "skip"     → job was already processed → go to END
+        "loop"     → duplicate job already processed → back to loop_controller
         "continue" → new job → proceed to analysis_node
     """
     record = state.get("current_job") or {}
@@ -51,10 +54,18 @@ def intake_node(state: AgentState) -> AgentState:
 
         if already_processed:
             logger.info(f"[intake] SKIP — job_uid already in processed_jobs: {job_uid}")
+            # Phase 6.5: route to "loop" so the batch continues, not to END.
+            # In single-job mode, loop_controller is absent — graph.py maps
+            # "loop" → END in that case.
+            current_stats = state.get("pipeline_stats") or {}
             return {
                 **state,
                 "job_uid": job_uid,
-                "routing": "skip",
+                "routing": "loop",
+                "pipeline_stats": {
+                    **current_stats,
+                    "skipped": current_stats.get("skipped", 0) + 1,
+                },
                 "metadata": {
                     **state.get("metadata", {}),
                     "skip_reason": "already_processed",
@@ -80,5 +91,7 @@ def intake_node(state: AgentState) -> AgentState:
 
 
 def route_after_intake(state: AgentState) -> str:
-    """Conditional edge function: returns 'skip' or 'continue'."""
-    return state.get("routing", "continue")
+    """Conditional edge function: returns 'loop' (skip) or 'continue' (new job)."""
+    routing = state.get("routing", "continue")
+    # Normalise legacy 'skip' to 'loop' for backward compatibility
+    return "loop" if routing == "skip" else routing

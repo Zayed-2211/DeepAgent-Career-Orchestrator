@@ -30,7 +30,6 @@ def planning_node(state: AgentState) -> AgentState:
     """
     record = state.get("current_job") or {}
     scout = record.get("scout") or {}
-    intelligence = record.get("intelligence") or {}
 
     is_job = scout.get("is_job_posting", True)
     company = scout.get("company_name") or "unknown company"

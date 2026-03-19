@@ -1,0 +1,58 @@
+﻿python : 2026-03-12 03:49:48.218 | INFO     | 
+__main__:run_pipeline:107 - [agent] Running pre-pipeline CV sync 
+(--sync-cv enabled)...
+At line:1 char:31
++ ... s\activate; python scripts/run_agent.py --pipeline --dev 
+--sync-cv -- ...
++                 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (2026-03-12 03:4...-c 
+   v enabled)...:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+2026-03-12 03:49:48.219 | INFO     | 
+scripts.sync_cv_projects:sync_cv_projects:167 - Loaded 
+my_projects.json ù 3 existing project(s).
+2026-03-12 03:49:48.219 | INFO     | 
+scripts.sync_cv_projects:sync_cv_projects:173 - Extracting 
+projects from CV using Gemini...
+2026-03-12 03:49:48.221 | INFO     | 
+src.profile.cv_extractor:extract_projects_from_cv:117 - 
+Extracting CV projects using model: gemini-2.5-flash
+2026-03-12 03:49:58.140 | INFO     | 
+src.profile.cv_extractor:extract_projects_from_cv:134 - Extracted 
+2 project(s) from CV.
+2026-03-12 03:49:58.148 | INFO     | 
+scripts.sync_cv_projects:sync_cv_projects:180 - Gemini found 2 
+project(s) in the CV.
+Traceback (most recent call last):
+  File "S:\DeepAgent-Career-Orchestrator\scripts\run_agent.py", 
+line 304, in <module>
+    main()
+    ~~~~^^
+  File "S:\DeepAgent-Career-Orchestrator\scripts\run_agent.py", 
+line 279, in main
+    run_pipeline(
+    ~~~~~~~~~~~~^
+        thread_id=args.thread_id,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        force_scrape=args.force_scrape,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\DeepAgent-Career-Orchestrator\scripts\run_agent.py", 
+line 108, in run_pipeline
+    sync_cv_projects(dry_run=False, force=False)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"S:\DeepAgent-Career-Orchestrator\scripts\sync_cv_projects.py", 
+line 200, in sync_cv_projects
+    print("\n" + "\u2500" * 60)
+    ~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return 
+codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in 
+position 2-61: character maps to <undefined>

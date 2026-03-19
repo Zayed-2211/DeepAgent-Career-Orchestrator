@@ -35,16 +35,34 @@ class BaseScraper(ABC):
         """
         Execute the scraper for the given queries and locations.
         Returns a list of raw job dicts.
+        
+        Respects 'max_results' kwarg as a global budget across all queries.
         """
+        max_results = kwargs.get("max_results")
         logger.info(f"[{self.name}] Starting scrape — {len(queries)} queries × {len(locations)} locations")
+        if max_results:
+            logger.info(f"[{self.name}] Global budget: {max_results} records")
+        
         all_results: list[dict] = []
 
         for query in queries:
             for location in locations:
+                # Check budget before each query
+                if max_results and len(all_results) >= max_results:
+                    logger.info(f"[{self.name}] Budget reached ({max_results}). Stopping early.")
+                    return all_results
+                
                 try:
                     results = self.scrape(query=query, location=location, **kwargs)
                     logger.info(f"[{self.name}] '{query}' in '{location}' → {len(results)} results")
                     all_results.extend(results)
+                    
+                    # Truncate if over budget
+                    if max_results and len(all_results) > max_results:
+                        logger.info(f"[{self.name}] Truncating {len(all_results)} → {max_results}")
+                        all_results = all_results[:max_results]
+                        return all_results
+                        
                 except Exception as e:
                     logger.error(f"[{self.name}] Failed: '{query}' in '{location}' — {e}")
 

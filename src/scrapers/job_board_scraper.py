@@ -37,7 +37,8 @@ class JobBoardScraper(BaseScraper):
         Scrape jobs for a single query + location using python-jobspy.
         Returns a list of normalized job dicts.
         """
-        results_wanted = self.config.get("results_per_query", 20)
+        # Dev mode may inject a stricter per-platform cap via max_results.
+        results_wanted = self.config.get("max_results", self.config.get("results_per_query", 20))
         hours_old = self.config.get("hours_old", 72)
         distance = self.config.get("distance_miles", 50)
         fetch_desc = self.config.get("linkedin_fetch_description", False)

@@ -1,0 +1,102 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+}
+
+% Section formatting
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{12pt}{6pt}
+
+% No page numbers
+\pagestyle{empty}
+
+\begin{document}
+
+% Header
+\begin{center}
+    {\LARGE\bfseries \VAR{name}}\\[4pt]
+    \VAR{email} $|$ \VAR{phone} $|$ \VAR{location}\\[2pt]
+    \BLOCK{if linkedin_url}
+    LinkedIn: \href{\VAR{linkedin_url}}{\VAR{linkedin_url}}\\[2pt]
+    \BLOCK{endif}
+    \BLOCK{if github_url}
+    GitHub: \href{\VAR{github_url}}{\VAR{github_url}}
+    \BLOCK{endif}
+\end{center}
+
+% Professional Summary
+\section*{Professional Summary}
+\VAR{professional_summary}
+
+% Technical Skills
+\BLOCK{if technical_skills}
+\section*{Technical Skills}
+\VAR{technical_skills | join(', ')}
+\BLOCK{endif}
+
+% Experience
+\BLOCK{if experience}
+\section*{Professional Experience}
+\BLOCK{for exp in experience}
+\textbf{\VAR{exp.position}} -- \VAR{exp.company} \hfill \VAR{exp.period}
+\begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
+    \BLOCK{for bullet in exp.bullets}
+    \item \VAR{bullet}
+    \BLOCK{endfor}
+\end{itemize}
+\BLOCK{endfor}
+\BLOCK{endif}
+
+% Projects
+\BLOCK{if projects}
+\section*{Key Projects}
+\BLOCK{for project in projects}
+\textbf{\VAR{project.name}} \BLOCK{if project.github_url}-- \href{\VAR{project.github_url}}{GitHub}\BLOCK{endif}\\
+\textit{Technologies: \VAR{project.tech_stack | join(', ')}}
+\begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
+    \BLOCK{for bullet in project.bullets}
+    \item \VAR{bullet}
+    \BLOCK{endfor}
+\end{itemize}
+\BLOCK{endfor}
+\BLOCK{endif}
+
+% Education
+\BLOCK{if education}
+\section*{Education}
+\BLOCK{for edu in education}
+\textbf{\VAR{edu.degree}} -- \VAR{edu.institution} \hfill \VAR{edu.period}\\
+\BLOCK{if edu.gpa}GPA: \VAR{edu.gpa}\BLOCK{endif}
+\BLOCK{if edu.honors}\\ \textit{\VAR{edu.honors}}\BLOCK{endif}
+\BLOCK{endfor}
+\BLOCK{endif}
+
+% Soft Skills
+\BLOCK{if soft_skills}
+\section*{Additional Skills}
+\VAR{soft_skills | join(', ')}
+\BLOCK{endif}
+
+% Certifications
+\BLOCK{if certifications}
+\section*{Certifications}
+\begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
+    \BLOCK{for cert in certifications}
+    \item \VAR{cert}
+    \BLOCK{endfor}
+\end{itemize}
+\BLOCK{endif}
+
+\end{document}

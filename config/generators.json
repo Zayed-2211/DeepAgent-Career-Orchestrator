@@ -1,0 +1,85 @@
+{
+  "_comment": "Configuration for CV and cover letter generation (Phase 7)",
+  "_description": "Controls how Gemini tailors CVs and cover letters for each job",
+  
+  "cv_generation": {
+    "_comment": "CV tailoring settings",
+    "enabled": true,
+    "model": "gemini-2.5-flash",
+    "_model_options": [
+      "gemini-2.5-flash (recommended - fast, high quality)",
+      "gemini-1.5-pro (slower, highest quality)",
+      "gemini-1.5-flash-8b (fastest, good quality)"
+    ],
+    
+    "temperature": 0.3,
+    "_temperature_note": "Lower = more consistent, Higher = more creative (0.0-1.0)",
+    
+    "max_projects": 3,
+    "_max_projects_note": "Maximum number of projects to include in tailored CV",
+    
+    "max_experience_bullets": 5,
+    "_max_experience_bullets_note": "Maximum bullet points per experience entry",
+    
+    "max_project_bullets": 3,
+    "_max_project_bullets_note": "Maximum bullet points per project",
+    
+    "include_skills_section": true,
+    "_include_skills_section_note": "Whether to include a skills section (recommended)",
+    
+    "ats_friendly": true,
+    "_ats_friendly_note": "Optimize for ATS parsing (single column, standard fonts, no tables)"
+  },
+  
+  "cover_letter_generation": {
+    "_comment": "Cover letter generation settings",
+    "enabled": true,
+    "model": "gemini-2.5-flash",
+    
+    "temperature": 0.4,
+    "_temperature_note": "Slightly higher for more personalized tone",
+    
+    "max_paragraphs": 4,
+    "_max_paragraphs_note": "Introduction, 2 body paragraphs, conclusion",
+    
+    "tone": "professional",
+    "_tone_options": ["professional", "enthusiastic", "formal", "conversational"],
+    
+    "include_company_research": true,
+    "_include_company_research_note": "Use Phase 8 research in cover letter (if available)"
+  },
+  
+  "latex_compilation": {
+    "_comment": "LaTeX to PDF compilation settings",
+    "enabled": true,
+    
+    "pdflatex_path": "pdflatex",
+    "_pdflatex_path_note": "Path to pdflatex executable (default assumes it's in PATH)",
+    
+    "compile_timeout": 30,
+    "_compile_timeout_note": "Maximum seconds to wait for PDF compilation",
+    
+    "keep_tex_files": true,
+    "_keep_tex_files_note": "Keep .tex source files after compilation",
+    
+    "cleanup_aux_files": true,
+    "_cleanup_aux_files_note": "Delete .aux, .log, .out files after compilation"
+  },
+  
+  "output_paths": {
+    "_comment": "Where to save generated documents",
+    "cv_filename": "tailored_cv.pdf",
+    "cover_letter_filename": "cover_letter.pdf",
+    "tex_cv_filename": "tailored_cv.tex",
+    "tex_cover_letter_filename": "cover_letter.tex"
+  },
+  
+  "dev_mode": {
+    "_comment": "Development mode settings",
+    "skip_pdf_compilation": false,
+    "_skip_pdf_compilation_note": "Set to true to skip PDF generation during testing",
+    
+    "use_mock_data": false,
+    "_use_mock_data_note": "Use mock Gemini responses for testing without API calls"
+  }
+}

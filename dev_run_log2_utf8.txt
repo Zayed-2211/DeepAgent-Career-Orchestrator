@@ -1,0 +1,69 @@
+﻿python : 2026-03-12 04:01:21.825 | INFO     | 
+__main__:run_pipeline:107 - [agent] Running pre-pipeline CV sync 
+(--sync-cv enabled)...
+At line:1 char:31
++ ... s\activate; python scripts/run_agent.py --pipeline --dev 
+--sync-cv -- ...
++                 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (2026-03-12 04:0...-c 
+   v enabled)...:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+2026-03-12 04:01:21.826 | INFO     | 
+scripts.sync_cv_projects:sync_cv_projects:167 - Loaded 
+my_projects.json ù 3 existing project(s).
+2026-03-12 04:01:21.826 | INFO     | 
+scripts.sync_cv_projects:sync_cv_projects:173 - Extracting 
+projects from CV using Gemini...
+2026-03-12 04:01:21.829 | INFO     | 
+src.profile.cv_extractor:extract_projects_from_cv:117 - 
+Extracting CV projects using model: gemini-2.5-flash
+2026-03-12 04:01:33.973 | INFO     | 
+src.profile.cv_extractor:extract_projects_from_cv:134 - Extracted 
+2 project(s) from CV.
+2026-03-12 04:01:33.981 | INFO     | 
+scripts.sync_cv_projects:sync_cv_projects:180 - Gemini found 2 
+project(s) in the CV.
+
+------------------------------------------------------------
+                   CV Projects Sync Summary                 
+------------------------------------------------------------
+  Extracted from CV        : 2
+  Skipped (real repo on GitHub): 1
+    ò Secure Agentic CRAG
+  Skipped (already in JSON): 1
+    ò Video to Video Translation (Graduation Project)
+  To be added              : 0
+------------------------------------------------------------
+Traceback (most recent call last):
+  File "S:\DeepAgent-Career-Orchestrator\scripts\run_agent.py", 
+line 304, in <module>
+    main()
+    ~~~~^^
+  File "S:\DeepAgent-Career-Orchestrator\scripts\run_agent.py", 
+line 279, in main
+    run_pipeline(
+    ~~~~~~~~~~~~^
+        thread_id=args.thread_id,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        force_scrape=args.force_scrape,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "S:\DeepAgent-Career-Orchestrator\scripts\run_agent.py", 
+line 108, in run_pipeline
+    sync_cv_projects(dry_run=False, force=False)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"S:\DeepAgent-Career-Orchestrator\scripts\sync_cv_projects.py", 
+line 219, in sync_cv_projects
+    print("  \u2705 Nothing new to add.")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return 
+codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character 
+'\u2705' in position 2: character maps to <undefined>

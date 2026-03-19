@@ -1,0 +1,82 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{parskip}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+}
+
+% No page numbers
+\pagestyle{empty}
+
+\begin{document}
+
+% Header
+\begin{flushleft}
+    \textbf{\VAR{name}}\\
+    \VAR{email} $|$ \VAR{phone}\\
+    \VAR{location}\\
+    \BLOCK{if date}
+    \vspace{12pt}
+    \VAR{date}
+    \BLOCK{endif}
+\end{flushleft}
+
+\vspace{12pt}
+
+% Recipient
+\BLOCK{if recipient_name or company_name}
+\begin{flushleft}
+    \BLOCK{if recipient_name}
+    \VAR{recipient_name}\\
+    \BLOCK{endif}
+    \BLOCK{if company_name}
+    \VAR{company_name}\\
+    \BLOCK{endif}
+    \BLOCK{if company_address}
+    \VAR{company_address}
+    \BLOCK{endif}
+\end{flushleft}
+
+\vspace{12pt}
+\BLOCK{endif}
+
+% Salutation
+Dear \BLOCK{if recipient_name}\VAR{recipient_name}\BLOCK{else}Hiring Manager\BLOCK{endif},
+
+\vspace{6pt}
+
+% Opening paragraph
+\VAR{opening}
+
+\vspace{6pt}
+
+% Body paragraph 1
+\VAR{body_paragraph_1}
+
+\vspace{6pt}
+
+% Body paragraph 2
+\VAR{body_paragraph_2}
+
+\vspace{6pt}
+
+% Closing paragraph
+\VAR{closing}
+
+\vspace{12pt}
+
+% Sign-off
+\begin{flushleft}
+    Sincerely,\\[12pt]
+    \VAR{name}
+\end{flushleft}
+
+\end{document}

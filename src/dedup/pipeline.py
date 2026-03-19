@@ -122,7 +122,9 @@ class DeduplicationPipeline:
             logger.info(f"[pipeline] Saved {len(output_records)} records → {output_path}")
 
         self._log_stats(stats)
-        return stats
+        # Return stats + the records themselves so callers (e.g. dedup_node)
+        # can access the clean records without needing to write them to disk.
+        return {**stats, "unique_records": output_records}
 
     # ------------------------------------------------------------------
     # DB helpers

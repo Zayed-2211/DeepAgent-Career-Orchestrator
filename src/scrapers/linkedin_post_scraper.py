@@ -106,6 +106,7 @@ class LinkedInPostScraper(BaseScraper):
     def __init__(self, platform_config: dict):
         super().__init__(name=Platform.LINKEDIN_POSTS.value)
         self.config = platform_config
+        self.actor_id = self.config.get("actor_id", ACTOR_ID)
         self._client = self._init_client()
 
     # ------------------------------------------------------------------
@@ -277,13 +278,14 @@ class LinkedInPostScraper(BaseScraper):
     # ------------------------------------------------------------------
     def _run_actor(self, search_urls: list[str]) -> list[dict]:
         """Start the Apify actor, wait for completion, download results."""
+        max_results = self.config.get("max_results", 100)
         run_input = {
             "urls": search_urls,
-            "maxResults": 100,   # Max posts to collect across all URLs
+            "maxResults": max_results,   # Max posts to collect across all URLs
         }
         logger.debug(f"[linkedin_posts] Sending {len(search_urls)} URLs to actor")
 
-        run = self._client.actor(ACTOR_ID).call(run_input=run_input)
+        run = self._client.actor(self.actor_id).call(run_input=run_input)
         if not run:
             logger.error("[linkedin_posts] Actor run returned None")
             return []

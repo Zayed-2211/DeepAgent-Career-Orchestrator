@@ -182,6 +182,8 @@ POST TEXT:
 
     def _call_gemini(self, post_text: str) -> list[SingleJobPost]:
         """Call Gemini with structured output schema. Returns list of roles."""
+        import time
+        
         prompt = self._PROMPT_TEMPLATE.format(post_text=post_text[:4000])
 
         for model in _MODELS:
@@ -196,8 +198,20 @@ POST TEXT:
                     ),
                 )
                 result = SplitResult.model_validate_json(response.text)
+                
+                # Rate limit: sleep 4s between calls (free tier: 15 req/min)
+                time.sleep(4)
+                
                 return result.roles
+                
             except Exception as e:
+                error_str = str(e).lower()
+                
+                # Handle quota exhaustion gracefully
+                if "429" in error_str or "quota" in error_str or "resource_exhausted" in error_str:
+                    logger.warning(f"[splitter] Quota exhausted on {model}. Returning original post (no split).")
+                    return []  # Don't try other models - quota is account-wide
+                
                 logger.warning(f"[splitter] Model {model} failed: {e}")
                 continue
 
