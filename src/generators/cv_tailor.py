@@ -13,6 +13,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from loguru import logger
 
 from config.settings import CONFIG_DIR, get_settings
+from config.prompts import CV_SYSTEM_PROMPT, CV_CUSTOM_INSTRUCTIONS
 from src.generators.schemas import TailoredCV
 
 
@@ -98,12 +99,15 @@ class CVTailor:
             logger.info(f"[cv_tailor] Starting CV tailoring for '{job_title}' at {company}")
             logger.debug(f"[cv_tailor] Using model: {self.model_name}")
             
-            # Get configurable prompts from config
+            # Get configurable prompts from config (with fallback to centralized prompts)
             system_prompt = self.config.get("cv_generation", {}).get(
                 "system_prompt",
-                "You are an expert CV writer specializing in ATS-optimized, tailored resumes for tech roles."
+                CV_SYSTEM_PROMPT
             )
-            custom_instructions = self.config.get("cv_generation", {}).get("custom_instructions", "")
+            custom_instructions = self.config.get("cv_generation", {}).get(
+                "custom_instructions",
+                CV_CUSTOM_INSTRUCTIONS
+            )
             
             # Add custom instructions to the prompt if provided
             full_prompt = prompt
@@ -155,45 +159,25 @@ class CVTailor:
         max_exp_bullets = self.config.get("cv_generation", {}).get("max_experience_bullets", 5)
         max_proj_bullets = self.config.get("cv_generation", {}).get("max_project_bullets", 3)
         
-        prompt = f"""You are an expert CV writer specializing in ATS-optimized, tailored resumes for tech roles.
-
-**Job Details:**
-- Position: {job_title}
-- Company: {company}
-- Role Summary: {role_summary}
-- Required Tech Stack: {', '.join(tech_stack[:10])}
-- Required Skills: {', '.join(required_skills[:10])}
-- Preferred Skills: {', '.join(preferred_skills[:5])}
-- Key Responsibilities: {', '.join(responsibilities[:5])}
-
-**Matched Projects (Top {max_projects}):**
-{self._format_projects(matched_projects[:max_projects])}
-
-**User Profile:**
-{self._format_user_profile(user_profile)}
-
-**Task:**
-Generate a tailored CV that:
-1. **Professional Summary**: Write a 2-3 sentence summary that positions the candidate as an ideal fit for this specific role. Mention the most relevant skills and experience.
-
-2. **Experience**: Tailor the candidate's work experience bullets to emphasize achievements and responsibilities that align with the job requirements. Maximum {max_exp_bullets} bullets per role. Use action verbs and quantify results where possible.
-
-3. **Projects**: Select and tailor the top {max_projects} matched projects. For each project, write {max_proj_bullets} bullets that highlight aspects most relevant to the job. Emphasize technologies and outcomes that match the job requirements.
-
-4. **Technical Skills**: List technical skills that appear in BOTH the user's profile AND the job requirements. Prioritize exact matches. Maximum 15 skills.
-
-5. **Soft Skills**: Extract soft skills mentioned in the job description that the user likely possesses based on their experience. Maximum 5 skills.
-
-**Guidelines:**
-- Be honest - don't invent experience or skills
-- Use keywords from the job description naturally
-- Quantify achievements with numbers/percentages when possible
-- Keep language professional and concise
-- Optimize for ATS parsing (avoid fancy formatting in text)
-- Emphasize impact and results, not just duties
-
-Generate the tailored CV now."""
-
+        user_profile_summary = self._format_user_profile(user_profile)
+        projects_summary = self._format_projects(matched_projects[:max_projects])
+        
+        # Use centralized prompt template from config/prompts.py
+        from config.prompts import CV_MAIN_PROMPT_TEMPLATE
+        
+        prompt = CV_MAIN_PROMPT_TEMPLATE.format(
+            job_title=job_title,
+            company=company,
+            tech_stack=', '.join(tech_stack),
+            must_haves=', '.join(required_skills),
+            nice_to_haves=', '.join(preferred_skills),
+            user_profile_summary=user_profile_summary,
+            projects_summary=projects_summary,
+            max_projects=max_projects,
+            max_exp_bullets=max_exp_bullets,
+            max_proj_bullets=max_proj_bullets
+        )
+        
         return prompt
     
     def _format_projects(self, projects: list[dict]) -> str:

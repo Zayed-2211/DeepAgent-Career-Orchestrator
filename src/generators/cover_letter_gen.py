@@ -13,6 +13,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from loguru import logger
 
 from config.settings import CONFIG_DIR, get_settings
+from config.prompts import COVER_LETTER_SYSTEM_PROMPT, COVER_LETTER_CUSTOM_INSTRUCTIONS
 from src.generators.schemas import TailoredCoverLetter
 
 
@@ -99,12 +100,15 @@ class CoverLetterGenerator:
             logger.info(f"[cover_letter] Starting cover letter generation for '{job_title}' at {company}")
             logger.debug(f"[cover_letter] Using model: {self.model_name}")
             
-            # Get configurable prompts from config
+            # Get configurable prompts from config (with fallback to centralized prompts)
             system_prompt = self.config.get("cover_letter_generation", {}).get(
                 "system_prompt",
-                "You are an expert cover letter writer specializing in compelling, personalized application letters for tech roles."
+                COVER_LETTER_SYSTEM_PROMPT
             )
-            custom_instructions = self.config.get("cover_letter_generation", {}).get("custom_instructions", "")
+            custom_instructions = self.config.get("cover_letter_generation", {}).get(
+                "custom_instructions",
+                COVER_LETTER_CUSTOM_INSTRUCTIONS
+            )
             
             # Add custom instructions to the prompt if provided
             full_prompt = prompt
