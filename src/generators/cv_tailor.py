@@ -98,15 +98,34 @@ class CVTailor:
             logger.info(f"[cv_tailor] Starting CV tailoring for '{job_title}' at {company}")
             logger.debug(f"[cv_tailor] Using model: {self.model_name}")
             
+            # Get configurable prompts from config
+            system_prompt = self.config.get("cv_generation", {}).get(
+                "system_prompt",
+                "You are an expert CV writer specializing in ATS-optimized, tailored resumes for tech roles."
+            )
+            custom_instructions = self.config.get("cv_generation", {}).get("custom_instructions", "")
+            
+            # Add custom instructions to the prompt if provided
+            full_prompt = prompt
+            if custom_instructions:
+                full_prompt = f"{custom_instructions}\n\n{prompt}"
+            
             prompt_template = ChatPromptTemplate.from_messages([
-                ("system", "You are an expert CV writer specializing in ATS-optimized, tailored resumes for tech roles."),
+                ("system", system_prompt),
                 ("human", "{prompt}")
             ])
             
             chain = prompt_template | self.llm
-            tailored_cv = chain.invoke({"prompt": prompt})
+            tailored_cv = chain.invoke({"prompt": full_prompt})
             
-            time.sleep(4)
+            # Rate limiting delay between Gemini calls
+            rate_limit_config = self.config.get("rate_limiting", {})
+            if rate_limit_config.get("enabled", True):
+                delay = rate_limit_config.get("delay_between_gemini_calls_seconds", 60)
+                logger.debug(f"[cv_tailor] Rate limiting: waiting {delay}s before next call")
+                time.sleep(delay)
+            else:
+                time.sleep(4)  # Minimum delay
             
             logger.info(f"[cv_tailor] ✓ CV tailored successfully - {len(tailored_cv.experience)} experience entries, {len(tailored_cv.projects)} projects")
             return tailored_cv

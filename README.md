@@ -155,15 +155,80 @@ data/
 📖 **See [QUICK_TEST_GUIDE.md](QUICK_TEST_GUIDE.md) for detailed instructions**
 📊 **See [FINAL_TEST_RESULTS.md](FINAL_TEST_RESULTS.md) for test results**
 
----
-
-### 🤖 Main Pipeline Runner
-
-**`scripts/run_agent.py`** - The orchestrator (Phases 0-6.5)
+#### CV Generation Testing
+**`scripts/test_cv_generation.py`** - Test CV/cover letter generation on already-scraped jobs
 
 ```bash
-# ✅ RECOMMENDED: Dev mode with 5 jobs (fast testing)
-python scripts/run_agent.py --pipeline --dev 5
+# Test on 2 jobs from already-scraped data
+python scripts/test_cv_generation.py --jobs 2
+
+# Skip rate limiting delays (use with caution)
+python scripts/test_cv_generation.py --jobs 2 --skip-delay
+```
+
+**Features:**
+- ✅ Uses already-scraped jobs (no re-scraping)
+- ✅ Organized output with progress tracking
+- ✅ Detailed summary table
+- ✅ Rate limiting built-in (5min before start, 1min between calls)
+- ✅ Configurable delays via `config/generators.json`
+
+---
+
+## ⚙️ Configuration
+
+### Editable Prompts
+
+You can customize the AI prompts used for CV and cover letter generation in `config/generators.json`:
+
+```json
+{
+  "cv_generation": {
+    "system_prompt": "You are an expert CV writer...",
+    "custom_instructions": "Focus on quantifiable achievements..."
+  },
+  "cover_letter_generation": {
+    "system_prompt": "You are an expert cover letter writer...",
+    "custom_instructions": "Show enthusiasm for the role..."
+  }
+}
+```
+
+**Edit `custom_instructions` to add your preferences:**
+- Specific writing style
+- Industry-specific terminology
+- Emphasis on certain skills
+- Formatting preferences
+
+### Rate Limiting
+
+Control API call delays in `config/generators.json`:
+
+```json
+{
+  "rate_limiting": {
+    "delay_before_cv_generation_seconds": 300,
+    "delay_between_gemini_calls_seconds": 60,
+    "enabled": true
+  }
+}
+```
+
+**Why delays?**
+- Gemini free tier: 20 requests/day
+- Prevents quota exhaustion
+- Allows multiple jobs to be processed
+
+---
+
+### 🤖 Pipeline Runners
+
+#### Full Pipeline
+**`scripts/run_agent.py`** - Complete pipeline from scraping to CV generation
+
+```bash
+# ✅ RECOMMENDED: Dev mode with 3 jobs (preserves API quota)
+python scripts/run_agent.py --pipeline --dev 3
 
 # Full production run (scrapes all enabled platforms)
 python scripts/run_agent.py --pipeline

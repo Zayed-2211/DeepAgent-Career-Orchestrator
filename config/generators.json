@@ -28,7 +28,13 @@
     "_include_skills_section_note": "Whether to include a skills section (recommended)",
     
     "ats_friendly": true,
-    "_ats_friendly_note": "Optimize for ATS parsing (single column, standard fonts, no tables)"
+    "_ats_friendly_note": "Optimize for ATS parsing (single column, standard fonts, no tables)",
+    
+    "system_prompt": "You are an expert CV writer specializing in ATS-optimized, tailored resumes for tech roles. Create professional, concise, and impactful content that highlights relevant experience and skills.",
+    "_system_prompt_note": "System message that sets the AI's role and behavior",
+    
+    "custom_instructions": "Focus on quantifiable achievements and technical depth. Use action verbs. Keep bullet points concise (max 2 lines each). Emphasize technologies and skills mentioned in the job description.",
+    "_custom_instructions_note": "Additional instructions to guide CV generation - EDIT THIS to add your preferences"
   },
   
   "cover_letter_generation": {
@@ -46,7 +52,13 @@
     "_tone_options": ["professional", "enthusiastic", "formal", "conversational"],
     
     "include_company_research": true,
-    "_include_company_research_note": "Use Phase 8 research in cover letter (if available)"
+    "_include_company_research_note": "Use Phase 8 research in cover letter (if available)",
+    
+    "system_prompt": "You are an expert cover letter writer specializing in compelling, personalized application letters for tech roles. Create engaging content that demonstrates genuine interest and cultural fit.",
+    "_system_prompt_note": "System message that sets the AI's role and behavior",
+    
+    "custom_instructions": "Show enthusiasm for the role and company. Connect your experience to their needs. Be authentic and specific. Avoid generic phrases. Keep paragraphs focused and concise.",
+    "_custom_instructions_note": "Additional instructions to guide cover letter generation - EDIT THIS to add your preferences"
   },
   
   "latex_compilation": {
@@ -72,6 +84,18 @@
     "cover_letter_filename": "cover_letter.pdf",
     "tex_cv_filename": "tailored_cv.tex",
     "tex_cover_letter_filename": "cover_letter.tex"
+  },
+  
+  "rate_limiting": {
+    "_comment": "Rate limiting to avoid API quota exhaustion",
+    "delay_before_cv_generation_seconds": 300,
+    "_delay_before_cv_generation_note": "Wait 5 minutes (300s) before starting CV generation to avoid rate limits",
+    
+    "delay_between_gemini_calls_seconds": 60,
+    "_delay_between_gemini_calls_note": "Wait 1 minute (60s) between each Gemini API call",
+    
+    "enabled": true,
+    "_enabled_note": "Set to false to disable delays (use with caution)"
   },
   
   "dev_mode": {

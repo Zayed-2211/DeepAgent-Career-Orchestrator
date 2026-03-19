@@ -6,14 +6,20 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import time
 
 from loguru import logger
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 
 from config.settings import CONFIG_DIR, DATA_DIR
 from src.agent.state import AgentState
 from src.generators.cv_tailor import CVTailor
 from src.generators.cover_letter_gen import CoverLetterGenerator
 from src.generators.latex_engine import LaTeXEngine
+
+console = Console()
 
 
 def generator_node(state: AgentState) -> dict:
@@ -41,7 +47,16 @@ def generator_node(state: AgentState) -> dict:
     
     job_title = current_job.get("title", "Unknown")
     company = current_job.get("company", "Unknown")
-    logger.info(f"[generator] Starting document generation for '{job_title}' at {company}")
+    
+    # Rate limiting: Wait before starting CV generation
+    rate_limit_config = config.get("rate_limiting", {})
+    if rate_limit_config.get("enabled", True):
+        delay = rate_limit_config.get("delay_before_cv_generation_seconds", 300)
+        logger.info(f"[generator] ⏳ Rate limiting: Waiting {delay}s ({delay//60}m {delay%60}s) before CV generation...")
+        logger.info(f"[generator] This prevents hitting Gemini API rate limits")
+        time.sleep(delay)
+    
+    logger.info(f"[generator] 🚀 Starting document generation for '{job_title}' at {company}")
     
     if not current_job or not job_uid:
         logger.warning("[generator] No job data in state")

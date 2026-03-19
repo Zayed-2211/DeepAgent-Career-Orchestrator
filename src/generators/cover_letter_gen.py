@@ -99,15 +99,34 @@ class CoverLetterGenerator:
             logger.info(f"[cover_letter] Starting cover letter generation for '{job_title}' at {company}")
             logger.debug(f"[cover_letter] Using model: {self.model_name}")
             
+            # Get configurable prompts from config
+            system_prompt = self.config.get("cover_letter_generation", {}).get(
+                "system_prompt",
+                "You are an expert cover letter writer specializing in compelling, personalized application letters for tech roles."
+            )
+            custom_instructions = self.config.get("cover_letter_generation", {}).get("custom_instructions", "")
+            
+            # Add custom instructions to the prompt if provided
+            full_prompt = prompt
+            if custom_instructions:
+                full_prompt = f"{custom_instructions}\n\n{prompt}"
+            
             prompt_template = ChatPromptTemplate.from_messages([
-                ("system", "You are an expert cover letter writer specializing in compelling, personalized application letters for tech roles."),
+                ("system", system_prompt),
                 ("human", "{prompt}")
             ])
             
             chain = prompt_template | self.llm
-            cover_letter = chain.invoke({"prompt": prompt})
+            cover_letter = chain.invoke({"prompt": full_prompt})
             
-            time.sleep(4)
+            # Rate limiting delay between Gemini calls
+            rate_limit_config = self.config.get("rate_limiting", {})
+            if rate_limit_config.get("enabled", True):
+                delay = rate_limit_config.get("delay_between_gemini_calls_seconds", 60)
+                logger.debug(f"[cover_letter] Rate limiting: waiting {delay}s before next call")
+                time.sleep(delay)
+            else:
+                time.sleep(4)  # Minimum delay
             
             logger.info(f"[cover_letter] ✓ Cover letter generated successfully - Tone: {cover_letter.tone}")
             return cover_letter
